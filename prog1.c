@@ -20,19 +20,13 @@ const int MAX_STR_LEN = 1024;
 
 
 //accepts a pointer to a char array and a pointer to an int variable called numStrings
-void getInput(char** strArr, int* numStrings){
+int getInput(char** strArr){
     //stores raw string before processing
     char buf[1025] = "";
+    int numStrings;
 
     printf("How many words do you wish to enter? \n");
     int numInputs = scanf("%d\n", &numStrings);
-
-    if(numStrings < 0 || numStrings > MAX_ARRAY_SIZE){
-        printf("The number of words must be between 0 and 1000.\n");
-        getInput(strArr, &numStrings);
-    }
-
-    printf("Enter %d words:\n", numStrings);
 
     for(int i = 0; i < numStrings; i++){
         //put the string in buf
@@ -42,10 +36,12 @@ void getInput(char** strArr, int* numStrings){
         //store in the string array
         strcpy(strArr[i], buf);
         //resize the string array; +1 for \0
-        strArr[i] = realloc(strArr[i], strlen(strArr[i])+1);
+        strArr[i] = realloc(strArr[i], (strlen(strArr[i])+1) * sizeof(char));
         //reset the buffer for the next string
         memset(buf, 0, 1025);
     }
+
+    return numStrings;
 
 }
 
@@ -57,6 +53,7 @@ int cmp(const void *str1, const void *str2){
 
 
 void printStrings(char** strArr, int numStrings){
+    printf("\nSorted words:\n\n");
     for(int i = 0; i < numStrings; i++){
         printf("%s\n", strArr[i]);
     }
@@ -66,20 +63,20 @@ void printStrings(char** strArr, int numStrings){
 
 int main(){
 
-    int numStrings;
     char** stringArr = (char**) malloc(MAX_ARRAY_SIZE * sizeof(char*));
     for(int i = 0; i < MAX_ARRAY_SIZE; i++){
         stringArr[i] = (char*) malloc((MAX_STR_LEN+1) * sizeof(char));
     }
 
     //fill in the array with perfectly sized strings
-    getInput(stringArr, &numStrings);
+    int arraySize = getInput(stringArr);
     //resize the string array to exactly the number of strings
-    stringArr = realloc(stringArr, numStrings);
+    stringArr = realloc(stringArr, arraySize*sizeof(char*));
     //sort the string array using qsort
-    qsort(stringArr, numStrings, sizeof(char*), cmp);
+    qsort(stringArr, arraySize, sizeof(char*), cmp);
     //print the strings
-    printStrings(stringArr, numStrings);
+    printStrings(stringArr, arraySize);
+    
 
 
 

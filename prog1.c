@@ -1,14 +1,3 @@
-/*
-    Write a C program prog1.c that prompts a user for an integer n, then accepts n strings from 
-    standard input (one per line). Use fgets() to read each string. If the input is longer than 1024 
-    characters, truncate it to 1024 characters. Remove the newline from the string that fgets() 
-    appends, unless truncation already removed it. All the strings should be stored in a dynamically 
-    allocated array (with exactly n elements), with each element containing exactly the right number 
-    of characters to hold the string and the terminating null character. malloc()should be used to 
-    create the array of strings. Once the input is processed, use the standard library function 
-    qsort() to sort the strings and then output the sorted list using printf()
-*/
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,7 +65,12 @@ int main(){
     qsort(stringArr, arraySize, sizeof(char*), cmp);
     //print the strings
     printStrings(stringArr, arraySize);
-    
+
+    //free the strings and string array
+    for(int i = 0; i < arraySize; i++){
+        free(stringArr[i]);
+    }
+    free(stringArr);
 
 
 
